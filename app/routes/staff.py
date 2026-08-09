@@ -38,7 +38,10 @@ def dashboard():
 @approved_staff_required
 def trek_detail(trek_id):
     trek = _own_trek_or_404(trek_id)
-    form = StaffTrekUpdateForm(obj=trek, status=trek.status if trek.status in ("Open", "Closed", "Completed") else "Open")
+    form = StaffTrekUpdateForm(
+        obj=trek,
+        status=trek.status if trek.status in ("Open", "Closed", "Started", "Completed") else "Open",
+    )
     participants = trek.active_bookings
     return render_template("staff/trek_detail.html", trek=trek, form=form, participants=participants)
 
@@ -54,6 +57,12 @@ def update_trek(trek_id):
         else:
             trek.available_slots = form.available_slots.data
             trek.status = form.status.data
+            if trek.status == "Completed":
+                # Completing a trek moves every active booking into the
+                # trekkers' history as Completed.
+                for booking in trek.bookings:
+                    if booking.status == "Booked":
+                        booking.status = "Completed"
             db.session.commit()
             flash(f'Trek "{trek.name}" updated successfully.', "success")
         return redirect(url_for("staff.trek_detail", trek_id=trek.id))

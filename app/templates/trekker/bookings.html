@@ -4,7 +4,7 @@
 <h2 class="mb-3">My Trekking History</h2>
 <div class="table-responsive">
 <table class="table table-striped bg-white align-middle">
-    <thead><tr><th>Trek</th><th>Location</th><th>Booking Date</th><th>Status</th><th>Actions</th></tr></thead>
+    <thead><tr><th>Trek</th><th>Location</th><th>Booking Date</th><th>Booking Status</th><th>Trek Status</th><th>Actions</th></tr></thead>
     <tbody>
     {% for b in bookings %}
         <tr>
@@ -16,6 +16,7 @@
                 {% elif b.status == 'Cancelled' %}<span class="badge bg-secondary">Cancelled</span>
                 {% else %}<span class="badge bg-success">Completed</span>{% endif %}
             </td>
+            <td><span class="badge bg-info text-dark">{{ b.trek.status }}</span></td>
             <td>
                 {% if b.status == 'Booked' %}
                 <form method="POST" action="{{ url_for('trekker.cancel_booking', booking_id=b.id) }}">
@@ -26,7 +27,7 @@
             </td>
         </tr>
     {% else %}
-        <tr><td colspan="5" class="text-muted">You haven't booked any treks yet.</td></tr>
+        <tr><td colspan="6" class="text-muted">You haven't booked any treks yet.</td></tr>
     {% endfor %}
     </tbody>
 </table>

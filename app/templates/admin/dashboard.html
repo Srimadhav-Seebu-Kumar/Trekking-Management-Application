@@ -57,6 +57,24 @@
     <a href="{{ url_for('admin.bookings') }}" class="btn btn-outline-secondary">All Bookings</a>
 </div>
 
+{% if popular_treks %}
+<h4>Most Popular Treks (by bookings)</h4>
+<div class="card p-3 mb-4">
+    {% for item in popular_treks %}
+    <div class="mb-2">
+        <div class="d-flex justify-content-between">
+            <span>{{ item.trek.name }}</span>
+            <span class="text-muted">{{ item.count }} booking(s)</span>
+        </div>
+        <div class="progress" style="height: 12px;">
+            <div class="progress-bar bg-success" role="progressbar" style="width: {{ item.percent }}%;"
+                 aria-valuenow="{{ item.count }}" aria-valuemin="0" aria-valuemax="{{ popular_treks[0].count }}"></div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <h4>Recent Bookings</h4>
 <div class="table-responsive">
 <table class="table table-striped bg-white">

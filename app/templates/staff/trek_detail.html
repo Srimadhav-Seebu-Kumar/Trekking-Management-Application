@@ -9,7 +9,7 @@
     <div class="col-md-5">
         <div class="card p-3 mb-3">
             <h5>Update Trek</h5>
-            <form method="POST" action="{{ url_for('staff.update_trek', trek_id=trek.id) }}" novalidate>
+            <form method="POST" action="{{ url_for('staff.update_trek', trek_id=trek.id) }}">
                 {{ form.hidden_tag() }}
                 {{ render_field(form.available_slots) }}
                 {{ render_field(form.status) }}

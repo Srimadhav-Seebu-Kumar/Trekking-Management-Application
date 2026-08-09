@@ -8,7 +8,8 @@ assigned treks, and Trekkers browse and book open treks.
 
 - **Backend:** Flask (application factory + Blueprints)
 - **Frontend:** Jinja2 templates, HTML, CSS, Bootstrap 5 (CSS only — no JavaScript
-  is used anywhere in the app, including for the core requirements)
+  is used anywhere in the app, including for the core requirements; Bootstrap is
+  vendored locally in `app/static/css/` so the demo works fully offline)
 - **Database:** SQLite, created and seeded **programmatically** via
   Flask-SQLAlchemy (`db.create_all()`), never via a manual tool like DB Browser
 - **Auth / sessions:** Flask-Login
@@ -28,7 +29,8 @@ Trekking-Management-Application/
 │   │   ├── auth.py            # Register / login / logout
 │   │   ├── admin.py           # Admin dashboard, trek CRUD, staff & user management, search
 │   │   ├── staff.py           # Staff dashboard, trek updates, participant lists
-│   │   └── trekker.py         # Trekker dashboard, browse/search/book treks, history
+│   │   ├── trekker.py         # Trekker dashboard, browse/search/book treks, history
+│   │   └── api.py             # Read-only JSON API resources
 │   ├── templates/              # Jinja2 templates (Bootstrap 5 styling)
 │   └── static/css/style.css
 ├── config.py                   # App config (SQLite URI, default admin credentials)
@@ -48,7 +50,8 @@ Trekking-Management-Application/
 - Search treks, staff, and users by name, location, or ID
 - Blacklist / reinstate trekker accounts
 - Dashboard shows total treks, open treks, total trekkers, total staff, total
-  bookings, and pending staff-approval count
+  bookings, and pending staff-approval count, plus a no-JavaScript bar chart
+  (Bootstrap progress bars) of the most popular treks by bookings
 
 ### Trek Staff
 - Self-register, then must wait for admin approval before the dashboard
@@ -56,14 +59,17 @@ Trekking-Management-Application/
   instead of trek data)
 - Dashboard lists only the treks assigned to them, with live registration
   counts
-- Update a trek's available slots and status (Open / Closed / Completed) —
-  only for treks assigned to them (enforced server-side, 403 otherwise)
+- Update a trek's available slots and status (Open / Closed / Started /
+  Completed) — only for treks assigned to them (enforced server-side, 403
+  otherwise). Marking a trek Completed also moves all its active bookings to
+  `Completed`, building each trekker's history
 - View the participant list for each of their treks
 - Edit their own profile (name, contact, password)
 
 ### User (Trekker)
 - Self-register and log in
-- Browse treks with status `Open`; filter by name, location, and difficulty
+- Browse treks with status `Approved` or `Open`; filter by name, location, and
+  difficulty
 - Book a trek (only possible while it is `Open` and has free slots)
 - View booking status and full trekking history (bookings are never deleted —
   cancelling sets status to `Cancelled` rather than removing the record)
@@ -79,8 +85,8 @@ Trekking-Management-Application/
 - **Trek** — id, name, location, difficulty (`Easy`/`Moderate`/`Hard`),
   duration_days, total_slots, available_slots, assigned_staff_id (FK →
   StaffProfile, nullable), status
-  (`Pending`/`Approved`/`Open`/`Closed`/`Completed`), start_date, end_date,
-  description
+  (`Pending`/`Approved`/`Open`/`Closed`/`Started`/`Completed`), start_date,
+  end_date, description
 - **Booking** — id, user_id (FK → User), trek_id (FK → Trek), booking_date,
   status (`Booked`/`Cancelled`/`Completed`)
 
@@ -112,9 +118,20 @@ User (role=staff) 1───1 StaffProfile 1───* Trek 1───* Booking 
   `approved_staff_required` decorator on trek-management routes, and a trek
   can only be managed by the staff member it is actually assigned to
   (returns 403 otherwise).
-- **No JavaScript:** all interactivity (forms, navigation, flash messages) is
-  implemented with plain HTML forms and server-side redirects, per the
-  project's "no JS for core requirements" constraint.
+- **No JavaScript:** all interactivity (forms, navigation, flash messages,
+  charts) is implemented with plain HTML forms, server-side redirects, and CSS,
+  per the project's "no JS for core requirements" constraint. Frontend
+  validation uses HTML5 (`required`, `type="email"`, etc. rendered by
+  WTForms); full validation is repeated server-side in Flask controllers.
+
+## API Resource Endpoints (JSON)
+
+| Method | Endpoint          | Access     | Description                          |
+|--------|-------------------|------------|--------------------------------------|
+| GET    | `/api/treks`      | Public     | All Approved/Open treks              |
+| GET    | `/api/treks/<id>` | Public     | Single trek by ID                    |
+| GET    | `/api/users`      | Admin only | All users (id, name, email, role, status) |
+| GET    | `/api/bookings`   | Admin only | Every booking record                 |
 
 ## Setup & Running Locally
 

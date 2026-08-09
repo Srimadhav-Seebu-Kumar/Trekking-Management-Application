@@ -29,7 +29,10 @@
         <div class="card trek-card p-3">
             <h5>{{ trek.name }}</h5>
             <p class="text-muted mb-1">{{ trek.location }}</p>
-            <span class="badge badge-difficulty-{{ trek.difficulty }} text-white mb-2">{{ trek.difficulty }}</span>
+            <div class="mb-2">
+                <span class="badge badge-difficulty-{{ trek.difficulty }} text-white">{{ trek.difficulty }}</span>
+                <span class="badge bg-info text-dark">{{ trek.status }}</span>
+            </div>
             <p class="mb-1"><strong>Duration:</strong> {{ trek.duration_days }} day(s)</p>
             <p class="mb-1"><strong>Slots left:</strong> {{ trek.available_slots }} / {{ trek.total_slots }}</p>
             <p class="mb-2"><strong>Dates:</strong> {{ trek.start_date }} &rarr; {{ trek.end_date }}</p>

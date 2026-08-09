@@ -6,7 +6,7 @@
     <div class="col-md-6">
         <div class="card p-4">
             <h3 class="mb-3">Assign Staff to "{{ trek.name }}"</h3>
-            <form method="POST" novalidate>
+            <form method="POST">
                 {{ form.hidden_tag() }}
                 {{ render_field(form.staff_id) }}
                 {{ form.submit(class="btn btn-success w-100") }}

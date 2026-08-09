@@ -30,7 +30,9 @@ def dashboard():
 
 @bp.route("/treks")
 def browse_treks():
-    query = Trek.query.filter_by(status="Open")
+    # Trekkers can view Approved and Open treks; booking itself is only
+    # allowed while a trek's status is Open (enforced in book_trek).
+    query = Trek.query.filter(Trek.status.in_(("Approved", "Open")))
 
     location = request.args.get("location", "").strip()
     difficulty = request.args.get("difficulty", "").strip()

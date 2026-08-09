@@ -10,7 +10,7 @@ ROLES = ("admin", "staff", "trekker")
 ACCOUNT_STATUSES = ("Active", "Blacklisted")
 STAFF_APPROVAL_STATUSES = ("Pending", "Approved", "Rejected")
 DIFFICULTIES = ("Easy", "Moderate", "Hard")
-TREK_STATUSES = ("Pending", "Approved", "Open", "Closed", "Completed")
+TREK_STATUSES = ("Pending", "Approved", "Open", "Closed", "Started", "Completed")
 BOOKING_STATUSES = ("Booked", "Cancelled", "Completed")
 
 

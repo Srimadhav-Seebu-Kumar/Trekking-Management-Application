@@ -31,12 +31,14 @@ def create_app(config_class=Config):
     from app.routes.admin import bp as admin_bp
     from app.routes.staff import bp as staff_bp
     from app.routes.trekker import bp as trekker_bp
+    from app.routes.api import bp as api_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(staff_bp)
     app.register_blueprint(trekker_bp)
+    app.register_blueprint(api_bp)
 
     @app.errorhandler(403)
     def forbidden(e):

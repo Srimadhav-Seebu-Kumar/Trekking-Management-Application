@@ -28,7 +28,28 @@ def dashboard():
         "open_treks": Trek.query.filter_by(status="Open").count(),
     }
     recent_bookings = Booking.query.order_by(Booking.booking_date.desc()).limit(8).all()
-    return render_template("admin/dashboard.html", stats=stats, recent_bookings=recent_bookings)
+
+    # Top treks by number of bookings, rendered as a CSS-only bar chart.
+    popular_rows = (
+        db.session.query(Trek, db.func.count(Booking.id).label("booking_count"))
+        .join(Booking, Booking.trek_id == Trek.id)
+        .group_by(Trek.id)
+        .order_by(db.func.count(Booking.id).desc())
+        .limit(5)
+        .all()
+    )
+    max_count = popular_rows[0][1] if popular_rows else 0
+    popular_treks = [
+        {"trek": trek, "count": count, "percent": (count * 100 // max_count) if max_count else 0}
+        for trek, count in popular_rows
+    ]
+
+    return render_template(
+        "admin/dashboard.html",
+        stats=stats,
+        recent_bookings=recent_bookings,
+        popular_treks=popular_treks,
+    )
 
 
 # ---------- Treks ----------

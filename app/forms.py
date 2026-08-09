@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import (
     DateField,
+    EmailField,
     IntegerField,
     PasswordField,
     SelectField,
@@ -23,7 +24,7 @@ from app.models import DIFFICULTIES, TREK_STATUSES
 
 class RegisterForm(FlaskForm):
     name = StringField("Full Name", validators=[DataRequired(), Length(max=120)])
-    email = StringField("Email", validators=[DataRequired(), Email(), Length(max=150)])
+    email = EmailField("Email", validators=[DataRequired(), Email(), Length(max=150)])
     contact = StringField("Contact Number", validators=[DataRequired(), Length(max=50)])
     role = SelectField(
         "Register As",
@@ -38,7 +39,7 @@ class RegisterForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired(), Email()])
+    email = EmailField("Email", validators=[DataRequired(), Email()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Log In")
 
@@ -77,7 +78,13 @@ class AssignStaffForm(FlaskForm):
 class StaffTrekUpdateForm(FlaskForm):
     available_slots = IntegerField("Available Slots", validators=[DataRequired(), NumberRange(min=0)])
     status = SelectField(
-        "Trek Status", choices=[("Open", "Open"), ("Closed", "Closed"), ("Completed", "Completed")],
+        "Trek Status",
+        choices=[
+            ("Open", "Open"),
+            ("Closed", "Closed"),
+            ("Started", "Started"),
+            ("Completed", "Completed"),
+        ],
         validators=[DataRequired()],
     )
     submit = SubmitField("Update Trek")
