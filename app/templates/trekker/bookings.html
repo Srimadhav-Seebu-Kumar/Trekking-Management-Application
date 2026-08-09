@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}My Bookings{% endblock %}
+{% block content %}
+<h2 class="mb-3">My Trekking History</h2>
+<div class="table-responsive">
+<table class="table table-striped bg-white align-middle">
+    <thead><tr><th>Trek</th><th>Location</th><th>Booking Date</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for b in bookings %}
+        <tr>
+            <td>{{ b.trek.name }}</td>
+            <td>{{ b.trek.location }}</td>
+            <td>{{ b.booking_date.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>
+                {% if b.status == 'Booked' %}<span class="badge bg-primary">Booked</span>
+                {% elif b.status == 'Cancelled' %}<span class="badge bg-secondary">Cancelled</span>
+                {% else %}<span class="badge bg-success">Completed</span>{% endif %}
+            </td>
+            <td>
+                {% if b.status == 'Booked' %}
+                <form method="POST" action="{{ url_for('trekker.cancel_booking', booking_id=b.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Cancel</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="5" class="text-muted">You haven't booked any treks yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

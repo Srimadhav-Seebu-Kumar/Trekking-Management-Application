@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Manage Staff{% endblock %}
+{% block content %}
+<h2 class="mb-3">Manage Trek Staff</h2>
+<div class="table-responsive">
+<table class="table table-striped bg-white align-middle">
+    <thead>
+        <tr><th>ID</th><th>Name</th><th>Email</th><th>Contact</th><th>Assigned Treks</th><th>Status</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+    {% for profile in profiles %}
+        <tr>
+            <td>{{ profile.id }}</td>
+            <td>{{ profile.name }}</td>
+            <td>{{ profile.email }}</td>
+            <td>{{ profile.contact }}</td>
+            <td>{{ profile.assigned_treks|length }}</td>
+            <td>
+                {% if profile.status == 'Approved' %}<span class="badge bg-success">Approved</span>
+                {% elif profile.status == 'Pending' %}<span class="badge bg-warning text-dark">Pending</span>
+                {% elif profile.status == 'Blacklisted' %}<span class="badge bg-dark">Blacklisted</span>
+                {% else %}<span class="badge bg-secondary">{{ profile.status }}</span>{% endif %}
+            </td>
+            <td class="d-flex gap-1 flex-wrap">
+                {% if profile.status == 'Pending' %}
+                <form method="POST" action="{{ url_for('admin.approve_staff', profile_id=profile.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-success" type="submit">Approve</button>
+                </form>
+                <form method="POST" action="{{ url_for('admin.reject_staff', profile_id=profile.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">Reject</button>
+                </form>
+                {% endif %}
+                {% if profile.status != 'Blacklisted' %}
+                <form method="POST" action="{{ url_for('admin.blacklist_staff', profile_id=profile.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Blacklist</button>
+                </form>
+                {% else %}
+                <form method="POST" action="{{ url_for('admin.reinstate_staff', profile_id=profile.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-success" type="submit">Reinstate</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="7" class="text-muted">No staff registrations yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

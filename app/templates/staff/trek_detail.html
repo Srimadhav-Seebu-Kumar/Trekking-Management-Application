@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% from "_form_helpers.html" import render_field %}
+{% block title %}{{ trek.name }}{% endblock %}
+{% block content %}
+<h2 class="mb-1">{{ trek.name }}</h2>
+<p class="text-muted">{{ trek.location }} &middot; {{ trek.difficulty }} &middot; {{ trek.duration_days }} day(s)</p>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="card p-3 mb-3">
+            <h5>Update Trek</h5>
+            <form method="POST" action="{{ url_for('staff.update_trek', trek_id=trek.id) }}" novalidate>
+                {{ form.hidden_tag() }}
+                {{ render_field(form.available_slots) }}
+                {{ render_field(form.status) }}
+                {{ form.submit(class="btn btn-success w-100") }}
+            </form>
+        </div>
+    </div>
+    <div class="col-md-7">
+        <div class="card p-3">
+            <h5>Registered Participants ({{ participants|length }})</h5>
+            <div class="table-responsive">
+            <table class="table table-sm">
+                <thead><tr><th>Name</th><th>Contact</th><th>Booking Status</th></tr></thead>
+                <tbody>
+                {% for booking in participants %}
+                    <tr>
+                        <td>{{ booking.user.name }}</td>
+                        <td>{{ booking.user.contact }}</td>
+                        <td>{{ booking.status }}</td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="3" class="text-muted">No participants registered yet.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

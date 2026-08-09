@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+{% block content %}
+<h2 class="mb-3">Search Treks, Staff &amp; Users</h2>
+<form method="GET" class="row g-2 mb-4">
+    <div class="col-md-8">
+        <input type="text" class="form-control" name="q" value="{{ q }}" placeholder="Search by name, location, or ID">
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-success w-100" type="submit">Search</button>
+    </div>
+</form>
+
+{% if q %}
+<h4>Treks ({{ treks|length }})</h4>
+<div class="table-responsive mb-4">
+<table class="table table-sm bg-white">
+    <thead><tr><th>ID</th><th>Name</th><th>Location</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for t in treks %}
+        <tr><td>{{ t.id }}</td><td>{{ t.name }}</td><td>{{ t.location }}</td><td>{{ t.status }}</td></tr>
+    {% else %}
+        <tr><td colspan="4" class="text-muted">No matching treks.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<h4>Staff ({{ staff|length }})</h4>
+<div class="table-responsive mb-4">
+<table class="table table-sm bg-white">
+    <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for s in staff %}
+        <tr><td>{{ s.id }}</td><td>{{ s.name }}</td><td>{{ s.email }}</td><td>{{ s.status }}</td></tr>
+    {% else %}
+        <tr><td colspan="4" class="text-muted">No matching staff.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<h4>Users ({{ users|length }})</h4>
+<div class="table-responsive">
+<table class="table table-sm bg-white">
+    <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for u in users %}
+        <tr><td>{{ u.id }}</td><td>{{ u.name }}</td><td>{{ u.email }}</td><td>{{ u.account_status }}</td></tr>
+    {% else %}
+        <tr><td colspan="4" class="text-muted">No matching users.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

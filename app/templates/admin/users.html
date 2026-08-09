@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Manage Users{% endblock %}
+{% block content %}
+<h2 class="mb-3">Manage Trekkers</h2>
+<div class="table-responsive">
+<table class="table table-striped bg-white align-middle">
+    <thead>
+        <tr><th>ID</th><th>Name</th><th>Email</th><th>Contact</th><th>Status</th><th>Joined</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.contact }}</td>
+            <td>
+                {% if user.account_status == 'Active' %}<span class="badge bg-success">Active</span>
+                {% else %}<span class="badge bg-dark">Blacklisted</span>{% endif %}
+            </td>
+            <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>
+                {% if user.account_status == 'Active' %}
+                <form method="POST" action="{{ url_for('admin.blacklist_user', user_id=user.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Blacklist</button>
+                </form>
+                {% else %}
+                <form method="POST" action="{{ url_for('admin.reinstate_user', user_id=user.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button class="btn btn-sm btn-outline-success" type="submit">Reinstate</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="7" class="text-muted">No trekkers registered yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{{ trek.name }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card p-4">
+            <h2>{{ trek.name }}</h2>
+            <p class="text-muted">{{ trek.location }}</p>
+            <span class="badge badge-difficulty-{{ trek.difficulty }} text-white mb-3" style="width:fit-content;">{{ trek.difficulty }}</span>
+            <p><strong>Duration:</strong> {{ trek.duration_days }} day(s)</p>
+            <p><strong>Dates:</strong> {{ trek.start_date }} &rarr; {{ trek.end_date }}</p>
+            <p><strong>Slots:</strong> {{ trek.available_slots }} available out of {{ trek.total_slots }}</p>
+            <p><strong>Status:</strong> <span class="badge bg-info text-dark">{{ trek.status }}</span></p>
+            {% if trek.description %}<p>{{ trek.description }}</p>{% endif %}
+
+            {% if existing_booking %}
+                <div class="alert alert-info">You already have an active booking for this trek.</div>
+            {% elif trek.status != 'Open' %}
+                <div class="alert alert-secondary">This trek is not currently open for booking.</div>
+            {% elif trek.available_slots <= 0 %}
+                <div class="alert alert-danger">This trek is fully booked.</div>
+            {% else %}
+                <form method="POST" action="{{ url_for('trekker.book_trek', trek_id=trek.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-success">Book This Trek</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

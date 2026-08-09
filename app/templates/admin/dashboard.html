@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h2 class="mb-4">Admin Dashboard</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-2 col-sm-4 col-6">
+        <div class="card stat-card p-3 text-center">
+            <div class="stat-number">{{ stats.total_treks }}</div>
+            <div class="text-muted">Total Treks</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-6">
+        <div class="card stat-card p-3 text-center">
+            <div class="stat-number">{{ stats.open_treks }}</div>
+            <div class="text-muted">Open Treks</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-6">
+        <div class="card stat-card p-3 text-center">
+            <div class="stat-number">{{ stats.total_users }}</div>
+            <div class="text-muted">Trekkers</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-6">
+        <div class="card stat-card p-3 text-center">
+            <div class="stat-number">{{ stats.total_staff }}</div>
+            <div class="text-muted">Staff</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-6">
+        <div class="card stat-card p-3 text-center">
+            <div class="stat-number">{{ stats.total_bookings }}</div>
+            <div class="text-muted">Bookings</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-6">
+        <div class="card stat-card p-3 text-center">
+            <div class="stat-number">{{ stats.pending_staff }}</div>
+            <div class="text-muted">Pending Staff</div>
+        </div>
+    </div>
+</div>
+
+{% if stats.pending_staff > 0 %}
+<div class="alert alert-warning">
+    You have {{ stats.pending_staff }} staff registration(s) awaiting approval.
+    <a href="{{ url_for('admin.staff_list') }}">Review now &rarr;</a>
+</div>
+{% endif %}
+
+<div class="d-flex gap-2 mb-4 flex-wrap">
+    <a href="{{ url_for('admin.new_trek') }}" class="btn btn-success">+ Add Trek</a>
+    <a href="{{ url_for('admin.treks') }}" class="btn btn-outline-secondary">Manage Treks</a>
+    <a href="{{ url_for('admin.staff_list') }}" class="btn btn-outline-secondary">Manage Staff</a>
+    <a href="{{ url_for('admin.users_list') }}" class="btn btn-outline-secondary">Manage Users</a>
+    <a href="{{ url_for('admin.bookings') }}" class="btn btn-outline-secondary">All Bookings</a>
+</div>
+
+<h4>Recent Bookings</h4>
+<div class="table-responsive">
+<table class="table table-striped bg-white">
+    <thead><tr><th>ID</th><th>Trekker</th><th>Trek</th><th>Date</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for b in recent_bookings %}
+        <tr>
+            <td>{{ b.id }}</td>
+            <td>{{ b.user.name }}</td>
+            <td>{{ b.trek.name }}</td>
+            <td>{{ b.booking_date.strftime('%Y-%m-%d') }}</td>
+            <td><span class="badge bg-secondary">{{ b.status }}</span></td>
+        </tr>
+    {% else %}
+        <tr><td colspan="5" class="text-muted">No bookings yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

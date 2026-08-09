@@ -1,0 +1,17 @@
+{% macro render_field(field) %}
+<div class="mb-3">
+    {{ field.label(class="form-label") }}
+    {% if field.type == 'SelectField' %}
+        {{ field(class="form-select" + (" is-invalid" if field.errors else "")) }}
+    {% elif field.type in ('TextAreaField',) %}
+        {{ field(class="form-control" + (" is-invalid" if field.errors else ""), rows=4) }}
+    {% else %}
+        {{ field(class="form-control" + (" is-invalid" if field.errors else "")) }}
+    {% endif %}
+    {% if field.errors %}
+        <div class="invalid-feedback">
+            {% for error in field.errors %}{{ error }}<br>{% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endmacro %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}All Bookings{% endblock %}
+{% block content %}
+<h2 class="mb-3">All Bookings (Historical Record)</h2>
+<div class="table-responsive">
+<table class="table table-striped bg-white align-middle">
+    <thead>
+        <tr><th>ID</th><th>Trekker</th><th>Trek</th><th>Booking Date</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+    {% for b in bookings %}
+        <tr>
+            <td>{{ b.id }}</td>
+            <td>{{ b.user.name }}</td>
+            <td>{{ b.trek.name }}</td>
+            <td>{{ b.booking_date.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>
+                {% if b.status == 'Booked' %}<span class="badge bg-primary">Booked</span>
+                {% elif b.status == 'Cancelled' %}<span class="badge bg-secondary">Cancelled</span>
+                {% else %}<span class="badge bg-success">Completed</span>{% endif %}
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="5" class="text-muted">No bookings yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

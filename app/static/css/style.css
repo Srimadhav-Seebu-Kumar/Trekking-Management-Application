@@ -1,0 +1,57 @@
+body {
+    background-color: #f6f8f7;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.hero {
+    background: linear-gradient(135deg, #2f6f4f 0%, #244b39 100%);
+    color: #fff;
+    padding: 3.5rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2f6f4f;
+}
+
+.trek-card {
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    height: 100%;
+}
+
+.badge-difficulty-Easy {
+    background-color: #3fa15e;
+}
+
+.badge-difficulty-Moderate {
+    background-color: #d69e2e;
+}
+
+.badge-difficulty-Hard {
+    background-color: #c0392b;
+}
+
+footer {
+    padding: 1.5rem 0;
+    color: #6c757d;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.navbar {
+    flex-wrap: wrap;
+}
